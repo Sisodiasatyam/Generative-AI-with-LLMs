@@ -1,0 +1,87 @@
+
+Generative AI & LLMs: Fine-Tuning, PEFT, Evaluation (Comprehensive Summary)
+=========================================================================
+
+1️⃣ Fine-Tuning & Instruction Fine-Tuning
+-----------------------------------------
+- Fine-tuning: Adjusts pre-trained LLM weights for a task (e.g., summarization, sentiment analysis).
+- Uses prompt → completion pairs:
+  Classify this review: I loved this DVD!
+  Sentiment: Positive
+- Typically requires GB-TB of labeled data (vs. PB-scale for pretraining).
+- Instruction Fine-Tuning:
+  - Uses prompts that directly instruct the model (e.g. “Summarize the following dialogue.”).
+  - Trains model to follow instructions across tasks → better generalization.
+  - Example FLAN-T5 template:
+    Dialogue:
+    <dialogue text>
+    What is a summary of this dialogue?
+    <summary>
+
+2️⃣ What is FLAN?
+-----------------
+- FLAN = Fine-tuned LAnguage Net
+- Family of models (FLAN-T5, FLAN-PaLM) instruction-tuned across hundreds/thousands of tasks.
+- Trained on Natural Instructions, Muffin, T0-SF, CoT datasets: reasoning, QA, summarization, code, etc.
+- Excels at zero-shot / few-shot tasks without further fine-tuning.
+
+3️⃣ Single-Task vs Multi-Task Fine-Tuning
+-----------------------------------------
+- Single-task: One task (e.g. summarization). 500–1,000 examples can work. Risk: forgetting.
+- Multi-task: Diverse instructions at once. Reduces forgetting, boosts generalization.
+
+4️⃣ Catastrophic Forgetting
+---------------------------
+- Fine-tuning on one task may degrade other abilities.
+- Mitigation: multi-task tuning, PEFT.
+
+5️⃣ PEFT: Parameter-Efficient Fine-Tuning
+-----------------------------------------
+- Adapts LLMs without updating all parameters → saves memory, compute.
+- Types:
+  Additive: Adapters, Soft Prompts
+  Selective: Partial layer tuning
+  Reparameterization: LoRA, QLoRA
+- LoRA: Adds low-rank matrices to frozen weights, 10x+ fewer params trained.
+- QLoRA: LoRA + 4-bit quantization, fits huge models on single GPU.
+- Soft Prompts: Trainable embeddings prepended to input, frozen weights.
+
+6️⃣ ROUGE — Summarization Metric
+--------------------------------
+- ROUGE-1: unigram overlap.
+- ROUGE-2: bigram overlap (better fluency check).
+- ROUGE-L: longest common subsequence (checks order).
+- How:
+  Precision = matches / output tokens
+  Recall = matches / reference tokens
+  F1 = 2 * Prec * Rec / (Prec + Rec)
+- Pitfalls: Can be gamed by repeating common words (e.g. cold cold cold cold).
+
+7️⃣ BLEU — Translation Metric
+-----------------------------
+- Measures n-gram precision (not recall).
+- Combines n-gram precisions + brevity penalty.
+- BLEU ~1.0 perfect match; ~0 poor.
+- Pitfalls: Short outputs can dodge n-gram mismatch.
+
+8️⃣ Evaluation Benchmarks
+--------------------------
+- GLUE / SuperGLUE: General NLU.
+- MMLU: Broad subject knowledge.
+- BIG-bench: Reasoning tasks.
+- HELM: Adds bias, fairness, robustness, efficiency.
+
+9️⃣ PEFT Trade-offs
+--------------------
+Memory: high efficiency
+Forgetting risk: low
+Accuracy: near full fine-tune (large models)
+Inference: slight overhead
+Flexibility: high (swap adapters/prompts)
+
+✅ Final Key Takeaways
+----------------------
+- FLAN = instruction-tuned LLM family → strong zero/few-shot.
+- PEFT = efficient, modular fine-tuning.
+- ROUGE/BLEU = surface overlap, not meaning → combine with human/task metrics.
+- ROUGE can be gamed — be ready to explain this.

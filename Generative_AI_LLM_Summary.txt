@@ -1,0 +1,120 @@
+
+Generative AI & LLMs - Comprehensive Interview-Ready Summary
+============================================================
+
+1️⃣ Large Language Models (LLMs): Examples & Architectures
+----------------------------------------------------------
+- BERT (110M parameters)
+  - Encoder-only model
+  - Pre-training: Masked Language Modeling (MLM) — predicts masked tokens using both left and right context
+  - Suitable for: classification, NER, word-level tasks
+
+- GPT-3 (175B parameters)
+  - Decoder-only model
+  - Pre-training: Causal Language Modeling (CLM) — predicts next token from left context
+  - Suitable for: text generation, emergent tasks
+
+- BLOOM (176B parameters)
+  - Decoder-only
+  - Open multilingual model
+
+- PaLM (540B parameters)
+  - Decoder-only, very large-scale model
+
+- LLaMa-65B
+  - Decoder-only
+  - More compute-efficient than earlier models of comparable size
+
+- FLAN-T5 / BART
+  - Encoder-decoder (sequence-to-sequence)
+  - Pre-training: span corruption / denoising
+  - Suitable for: translation, summarization
+
+2️⃣ Transformer Core Concepts
+------------------------------
+- Self-attention: Learns relationships between tokens in context
+- Positional encodings: Injects word order info into input embeddings
+- Parallelizable: Unlike RNNs, Transformers process input tokens together, enabling faster training
+- Model types:
+  - Encoder-only: Good for understanding tasks (e.g., BERT)
+  - Decoder-only: Good for generation (e.g., GPT, LLaMa)
+  - Encoder-decoder: Good for seq-to-seq (e.g., T5)
+
+3️⃣ Context Window / Token Limits
+---------------------------------
+- Token window = max tokens model can process at once (prompt + generated)
+- GPT-3: ~2,048 tokens
+- LLaMa-65B: ~4,096 tokens
+- PaLM, BLOOM: typically 2,048–4,096 tokens
+- Newer models: GPT-4 up to 8,000-32,000 tokens
+
+4️⃣ Prompting & In-Context Learning
+-----------------------------------
+- Zero-shot: Only task instruction, no examples
+- One-shot: Task + 1 example
+- Few-shot: Task + several examples (typically 5–6 in context window)
+
+5️⃣ Generative Configurations (Influence on Output)
+---------------------------------------------------
+- Max new tokens: Sets how many tokens the model generates beyond the prompt
+- Temperature:
+  - Low (<1): sharp, focused distribution → model chooses higher-probability tokens → deterministic
+  - High (>1): flattens distribution → model more likely to sample lower-probability tokens → creative but less predictable
+  - Effect: Temperature modifies the probability distribution from which next token is sampled
+- Top-K sampling:
+  - Randomly sample next token from top K highest probability tokens
+  - Prevents model from considering low-probability tokens
+- Top-P (nucleus) sampling:
+  - Dynamically chooses top tokens where cumulative probability <= P
+  - Adapts to model confidence
+
+6️⃣ Project Lifecycle
+---------------------
+1. Define task and scope
+2. Choose model: Pretrained LLM / Custom fine-tuned LLM / Train from scratch
+3. Align & adapt model: Prompt engineering, Fine-tuning, Human feedback
+4. Evaluate on task-specific metrics
+5. Optimize + deploy
+6. Integrate into applications
+
+7️⃣ Scaling Laws & Compute-Optimal Training
+-------------------------------------------
+- Performance depends on model size, dataset size, compute budget
+- Chinchilla finding:
+  - Compute-optimal dataset = ~20× model parameters (tokens)
+  - E.g. GPT-3 (175B params) ideally trained on ~3.5T tokens
+- Over-parameterized + under-trained models = inefficient
+- Trade-off: For fixed compute, balance model size & dataset size
+
+8️⃣ Compute & Memory Requirements
+---------------------------------
+- Storing weights:
+  - 1B params = ~4GB (FP32), ~2GB (FP16), ~1GB (INT8)
+- Training 1B params (high estimate):
+  - Weights = 4B bytes
+  - Optimizer states = 8B bytes
+  - Gradients = 4B bytes
+  - Activations/temp = 8B bytes
+  - Total: ~24GB
+- Strategies: DDP, FSDP, ZeRO for large model training
+
+9️⃣ Quantization Summary
+------------------------
++-----------+---------+------------+------------------+
+| Format    | Bits    | Memory      | Exponent/Fraction |
++-----------+---------+------------+------------------+
+| FP32      | 32-bit  | 4 bytes     | 8 / 23            |
+| FP16      | 16-bit  | 2 bytes     | 5 / 10            |
+| BFLOAT16  | 16-bit  | 2 bytes     | 8 / 7             |
+| INT8      | 8-bit   | 1 byte      | - / 7             |
++-----------+---------+------------+------------------+
+
+10️⃣ Domain Adaptation Example
+------------------------------
+- BloombergGPT (50B): ~51% financial data training, optimized for finance tasks
+
+Final Notes
+------------
+- Sampling configs reshape output probability distribution
+- Token window limits define max context
+- Balanced scaling is key: avoid large models with small datasets
